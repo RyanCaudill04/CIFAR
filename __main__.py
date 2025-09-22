@@ -32,7 +32,7 @@ def main():
             return
     elif not args.new:
         # Default behavior: find and load the CNN with highest accuracy
-        cnn_files = glob.glob('cnn_*.pth')
+        cnn_files = glob.glob('models/cnn_*.pth')
 
         if cnn_files:
             # Extract accuracy from filename and find the highest one
@@ -55,13 +55,15 @@ def main():
             else:
                 print("Found CNN files but couldn't parse accuracy, starting with new model...")
         else:
-            # Fallback to old naming convention
-            default_model = 'simple_cnn_cifar10.pth'
-            if os.path.exists(default_model):
-                print(f"Found existing model '{default_model}', loading...")
-                model.load_state_dict(torch.load(default_model))
-                model_loaded = True
-                print("Model loaded successfully!")
+            # Fallback to old naming convention and location
+            fallback_locations = ['models/simple_cnn_cifar10.pth', 'simple_cnn_cifar10.pth']
+            for default_model in fallback_locations:
+                if os.path.exists(default_model):
+                    print(f"Found existing model '{default_model}', loading...")
+                    model.load_state_dict(torch.load(default_model))
+                    model_loaded = True
+                    print("Model loaded successfully!")
+                    break
             else:
                 print("No existing model found, starting with new model...")
     else:
@@ -88,7 +90,8 @@ def main():
     print(f"\nFinal test accuracy: {final_accuracy:.2f}%")
 
     # Save the model so we can use it later without retraining
-    model_filename = f'cnn_{final_accuracy:.2f}.pth'
+    os.makedirs('models', exist_ok=True)
+    model_filename = f'models/cnn_{final_accuracy:.2f}.pth'
     torch.save(model.state_dict(), model_filename)  # Save just the learned weights
     print(f"Model saved as '{model_filename}'")
 
