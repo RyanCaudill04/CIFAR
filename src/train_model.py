@@ -1,18 +1,25 @@
-import torch                              # Main PyTorch library - gives us tensors (like arrays) and neural network basics
-import torch.nn as nn                     # Neural network modules - pre-built layers like Conv2d, Linear
-import torch.optim as optim              # Optimizers - algorithms that update our model's weights during training
-import torch.nn.functional as F          # Functions like ReLU, softmax - operations we apply to data
-import torchvision                       # Computer vision datasets and utilities
-import torchvision.transforms as transforms  # Image preprocessing tools (resize, normalize, etc.)
-import matplotlib.pyplot as plt          # For plotting graphs and images
-import numpy as np                       # Numerical operations (like advanced calculator)
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+import torchvision
+import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
+import numpy as np
+from src import test_model
 
 def train_model(model, trainloader, testloader, num_epochs=10):
   criterion = nn.CrossEntropyLoss()
-  optimizer = optim.Adam(model.parameters(), lr = 0.001)
+  optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
+  scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01,
+                                          steps_per_epoch=len(trainloader),
+                                          epochs=num_epochs)
 
-  device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")    # Macbook m2 (silicon) optimization
+  device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
   model.to(device)
+
+  # Enable mixed precision for MPS
+  scaler = torch.cuda.amp.GradScaler() if device.type == 'cuda' else None
 
   train_losses = []
   train_accuracies = []
@@ -21,40 +28,49 @@ def train_model(model, trainloader, testloader, num_epochs=10):
     model.train()
     running_loss = 0.0
     correct_predictions = 0
-    total_prediction = 0
+    total_predictions = 0
 
     for batch_idx, (inputs, labels) in enumerate(trainloader):
-      inputs, labels = inputs.to(device), labels.to(device)     # inputs: [32, 3, 32, 32], labels: [32]
+      inputs = inputs.to(device, non_blocking=True)
+      labels = labels.to(device, non_blocking=True)
 
-      # Reset
-      optimizer.zero_grad()
+      optimizer.zero_grad(set_to_none=True)
 
-      # Forward pass
-      outputs = model(inputs)
-      loss = criterion(outputs, labels)
+      # Mixed precision training
+      with torch.autocast(device_type='mps' if device.type == 'mps' else 'cpu'):
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
 
-      # Backward pass
-      loss.backward()
-      optimizer.step()
+      # Backward pass with gradient scaling if using CUDA
+      if scaler is not None:
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
+      else:
+        loss.backward()
+        optimizer.step()
+
+      scheduler.step()
 
       running_loss += loss.item()
-      _, predicted = torch.max(outputs.data, 1)
+      predicted = outputs.argmax(dim=1)
       total_predictions += labels.size(0)
-      correct_predictions += (predicted == labels).sum().item()
+      correct_predictions += predicted.eq(labels).sum().item()
 
-      if batch_idx % 500 == 499:      # Every 500th batch
-                print(f'Epoch [{epoch+1}/{num_epochs}], '
-                      f'Batch [{batch_idx+1}], '
-                      f'Loss: {running_loss/500:.4f}')  # Average loss over last 500 batches
-                running_loss = 0.0
+      if batch_idx % 500 == 499:
+        print(f'Epoch [{epoch+1}/{num_epochs}], '
+              f'Batch [{batch_idx+1}], '
+              f'Loss: {running_loss/500:.4f}, '
+              f'LR: {scheduler.get_last_lr()[0]:.6f}')
+        running_loss = 0.0
 
-      epoch_accuracy = 100 * correct_predictions / total_predictions  # Convert to percentage
-      train_accuracies.append(epoch_accuracy)  # Save for plotting later
-        
-        # Test the model on test data to see how well it generalizes
-      test_accuracy = test_model(model, testloader, device)  # Run on test set
-      print(f'Epoch [{epoch+1}/{num_epochs}] - '
-            f'Train Accuracy: {epoch_accuracy:.2f}% - '
-            f'Test Accuracy: {test_accuracy:.2f}%')
-      
+    epoch_accuracy = 100 * correct_predictions / total_predictions
+    train_accuracies.append(epoch_accuracy)
+
+    # Test the model on test data to see how well it generalizes
+    test_accuracy = test_model.test_model(model, testloader, device)
+    print(f'Epoch [{epoch+1}/{num_epochs}] - '
+          f'Train Accuracy: {epoch_accuracy:.2f}% - '
+          f'Test Accuracy: {test_accuracy:.2f}%')
+
   return train_accuracies
