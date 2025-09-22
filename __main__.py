@@ -2,6 +2,8 @@ from src import cifar_loader, train_model, test_model, cnn
 import torch
 import argparse
 import os
+import glob
+import re
 
 def main():
     parser = argparse.ArgumentParser(description='Train CIFAR-10 CNN model')
@@ -11,7 +13,7 @@ def main():
     args = parser.parse_args()
 
     print("Loading CIFAR-10 dataset...")
-    trainloader, testloader, classes = cifar_loader.load_cifar10_data()   # Download and prepare data
+    trainloader, testloader, classes = cifar_loader.load_cifar10_data(16)   # Download and prepare data
 
     print("Creating CNN model...")
     model = cnn.cnn()                     # Create an instance of our neural network
@@ -29,15 +31,39 @@ def main():
             print(f"Error: Model file '{args.use}' not found!")
             return
     elif not args.new:
-        # Default behavior: try to load existing model
-        default_model = 'simple_cnn_cifar10.pth'
-        if os.path.exists(default_model):
-            print(f"Found existing model '{default_model}', loading...")
-            model.load_state_dict(torch.load(default_model))
-            model_loaded = True
-            print("Model loaded successfully!")
+        # Default behavior: find and load the CNN with highest accuracy
+        cnn_files = glob.glob('cnn_*.pth')
+
+        if cnn_files:
+            # Extract accuracy from filename and find the highest one
+            best_model = None
+            best_accuracy = -1
+
+            for file in cnn_files:
+                match = re.search(r'cnn_(\d+\.\d+)\.pth', file)
+                if match:
+                    accuracy = float(match.group(1))
+                    if accuracy > best_accuracy:
+                        best_accuracy = accuracy
+                        best_model = file
+
+            if best_model:
+                print(f"Found existing model '{best_model}' with accuracy {best_accuracy:.2f}%, loading...")
+                model.load_state_dict(torch.load(best_model))
+                model_loaded = True
+                print("Model loaded successfully!")
+            else:
+                print("Found CNN files but couldn't parse accuracy, starting with new model...")
         else:
-            print("No existing model found, starting with new model...")
+            # Fallback to old naming convention
+            default_model = 'simple_cnn_cifar10.pth'
+            if os.path.exists(default_model):
+                print(f"Found existing model '{default_model}', loading...")
+                model.load_state_dict(torch.load(default_model))
+                model_loaded = True
+                print("Model loaded successfully!")
+            else:
+                print("No existing model found, starting with new model...")
     else:
         print("Starting with new model as requested...")
 
@@ -55,15 +81,16 @@ def main():
         print("\nStarting training with new model...")
 
     # Train the model and get training accuracy history
-    train_accuracies = train_model.train_model(model, trainloader, testloader, num_epochs=5)
+    train_accuracies = train_model.train_model(model, trainloader, testloader, num_epochs=10)
 
     # Final test to see how well our trained model performs
     final_accuracy = test_model.test_model(model, testloader, torch.device("mps" if torch.backends.mps.is_available() else "cpu"))
     print(f"\nFinal test accuracy: {final_accuracy:.2f}%")
 
     # Save the model so we can use it later without retraining
-    torch.save(model.state_dict(), 'simple_cnn_cifar10.pth')  # Save just the learned weights
-    print("Model saved as 'simple_cnn_cifar10.pth'")
+    model_filename = f'cnn_{final_accuracy:.2f}.pth'
+    torch.save(model.state_dict(), model_filename)  # Save just the learned weights
+    print(f"Model saved as '{model_filename}'")
 
 # CIFAR-10 class names for reference - what the numbers 0-9 represent
 classes = ['plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
