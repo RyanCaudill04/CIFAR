@@ -1,17 +1,12 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
-import torchvision
-import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
-import numpy as np
 from src import test_model
 
 def train_model(model, trainloader, testloader, num_epochs=10):
   criterion = nn.CrossEntropyLoss()
-  optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
-  scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.01,
+  optimizer = optim.AdamW(model.parameters(), lr=0.0005, weight_decay=1e-4)
+  scheduler = optim.lr_scheduler.OneCycleLR(optimizer, max_lr=0.0005,
                                           steps_per_epoch=len(trainloader),
                                           epochs=num_epochs)
 
