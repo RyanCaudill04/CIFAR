@@ -2,7 +2,6 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def load_cifar10_data(batch_size=32, data_dir='./data'):
@@ -91,18 +90,3 @@ def visualize_samples(data_loader, classes, num_samples=8):
 
     plt.tight_layout()
     plt.show()
-
-
-if __name__ == "__main__":
-    # Example usage
-    print("Loading CIFAR-10 dataset...")
-    train_loader, test_loader, classes = load_cifar10_data(batch_size=32)
-
-    print(f"Training samples: {len(train_loader.dataset)}")
-    print(f"Test samples: {len(test_loader.dataset)}")
-    print(f"Classes: {classes}")
-    print(f"Number of batches (train): {len(train_loader)}")
-
-    # Visualize some samples
-    print("\nVisualizing sample images...")
-    visualize_samples(train_loader, classes)

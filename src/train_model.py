@@ -14,7 +14,7 @@ def train_model(model, trainloader, testloader, num_epochs=10):
   model.to(device)
 
   # Enable mixed precision for MPS
-  scaler = torch.cuda.amp.GradScaler() if device.type == 'cuda' else None
+  scaler = torch.cuda.amp.GradScaler() if device.type == 'cuda' else None # TODO: Optimize for MPS for back propogation
 
   train_losses = []
   train_accuracies = []

@@ -88,10 +88,11 @@ def main():
     # Final test to see how well our trained model performs
     final_accuracy = test_model.test_model(model, testloader, torch.device("mps" if torch.backends.mps.is_available() else "cpu"))
     print(f"\nFinal test accuracy: {final_accuracy:.2f}%")
+    print(f"All train accuracies: {train_accuracies}")
 
     # Save the model so we can use it later without retraining
     os.makedirs('models', exist_ok=True)
-    model_filename = f'models/cnn_{final_accuracy:.2f}.pth'
+    model_filename = f'models/Second/cnn_{final_accuracy:.2f}.pth'
     torch.save(model.state_dict(), model_filename)  # Save just the learned weights
     print(f"Model saved as '{model_filename}'")
 
