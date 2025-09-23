@@ -1,0 +1,4 @@
+32->64->128
+3 Pools
+2 FCs
+3 Batch Normalizations
