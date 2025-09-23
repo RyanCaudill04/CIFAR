@@ -1,4 +1,8 @@
-32->64->128
+32->64->128 Three layer CNN
 3 Pools
 2 FCs
 3 Batch Normalizations
+10 epochs of training
+16 batch size
+0.0005 learning rate
+AdamW optimizer with OneCycleLR scheduler
