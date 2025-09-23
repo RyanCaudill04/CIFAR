@@ -1,3 +1,6 @@
 32->64->128 Three layer CNN
 3 Pools
 2 FCs
+2 iterations of training
+16 batch size
+0.0005 learning rate
