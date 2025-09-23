@@ -1,0 +1,76 @@
+Total parameters: 127,178
+
+Starting training with new model...
+Epoch [1/10], Batch [500], Loss: 2.2292, LR: 0.000023
+Epoch [1/10], Batch [1000], Loss: 2.0857, LR: 0.000033
+Epoch [1/10], Batch [1500], Loss: 1.9399, LR: 0.000050
+Epoch [1/10], Batch [2000], Loss: 1.8286, LR: 0.000072
+Epoch [1/10], Batch [2500], Loss: 1.7151, LR: 0.000099
+Epoch [1/10], Batch [3000], Loss: 1.6193, LR: 0.000131
+Epoch [1/10] - Train Accuracy: 30.63% - Test Accuracy: 50.51%
+Epoch [2/10], Batch [500], Loss: 1.5254, LR: 0.000176
+Epoch [2/10], Batch [1000], Loss: 1.4768, LR: 0.000215
+Epoch [2/10], Batch [1500], Loss: 1.4157, LR: 0.000255
+Epoch [2/10], Batch [2000], Loss: 1.3633, LR: 0.000295
+Epoch [2/10], Batch [2500], Loss: 1.3456, LR: 0.000334
+Epoch [2/10], Batch [3000], Loss: 1.2790, LR: 0.000371
+Epoch [2/10] - Train Accuracy: 50.36% - Test Accuracy: 59.58%
+Epoch [3/10], Batch [500], Loss: 1.2519, LR: 0.000413
+Epoch [3/10], Batch [1000], Loss: 1.2436, LR: 0.000442
+Epoch [3/10], Batch [1500], Loss: 1.2312, LR: 0.000465
+Epoch [3/10], Batch [2000], Loss: 1.1822, LR: 0.000483
+Epoch [3/10], Batch [2500], Loss: 1.1614, LR: 0.000495
+Epoch [3/10], Batch [3000], Loss: 1.1453, LR: 0.000500
+Epoch [3/10] - Train Accuracy: 57.88% - Test Accuracy: 66.56%
+Epoch [4/10], Batch [500], Loss: 1.1113, LR: 0.000499
+Epoch [4/10], Batch [1000], Loss: 1.1150, LR: 0.000497
+Epoch [4/10], Batch [1500], Loss: 1.0661, LR: 0.000494
+Epoch [4/10], Batch [2000], Loss: 1.0994, LR: 0.000490
+Epoch [4/10], Batch [2500], Loss: 1.0741, LR: 0.000484
+Epoch [4/10], Batch [3000], Loss: 1.0426, LR: 0.000477
+Epoch [4/10] - Train Accuracy: 62.50% - Test Accuracy: 69.14%
+Epoch [5/10], Batch [500], Loss: 1.0249, LR: 0.000467
+Epoch [5/10], Batch [1000], Loss: 0.9922, LR: 0.000457
+Epoch [5/10], Batch [1500], Loss: 1.0196, LR: 0.000447
+Epoch [5/10], Batch [2000], Loss: 0.9947, LR: 0.000435
+Epoch [5/10], Batch [2500], Loss: 0.9940, LR: 0.000423
+Epoch [5/10], Batch [3000], Loss: 0.9553, LR: 0.000409
+Epoch [5/10] - Train Accuracy: 65.78% - Test Accuracy: 71.92%
+Epoch [6/10], Batch [500], Loss: 0.9048, LR: 0.000391
+Epoch [6/10], Batch [1000], Loss: 0.9324, LR: 0.000376
+Epoch [6/10], Batch [1500], Loss: 0.9350, LR: 0.000360
+Epoch [6/10], Batch [2000], Loss: 0.9120, LR: 0.000344
+Epoch [6/10], Batch [2500], Loss: 0.9107, LR: 0.000327
+Epoch [6/10], Batch [3000], Loss: 0.9059, LR: 0.000310
+Epoch [6/10] - Train Accuracy: 68.59% - Test Accuracy: 74.10%
+Epoch [7/10], Batch [500], Loss: 0.8676, LR: 0.000288
+Epoch [7/10], Batch [1000], Loss: 0.8357, LR: 0.000270
+Epoch [7/10], Batch [1500], Loss: 0.8612, LR: 0.000252
+Epoch [7/10], Batch [2000], Loss: 0.8558, LR: 0.000234
+Epoch [7/10], Batch [2500], Loss: 0.8293, LR: 0.000216
+Epoch [7/10], Batch [3000], Loss: 0.8355, LR: 0.000199
+Epoch [7/10] - Train Accuracy: 71.17% - Test Accuracy: 75.53%
+Epoch [8/10], Batch [500], Loss: 0.7814, LR: 0.000177
+Epoch [8/10], Batch [1000], Loss: 0.7793, LR: 0.000160
+Epoch [8/10], Batch [1500], Loss: 0.7804, LR: 0.000144
+Epoch [8/10], Batch [2000], Loss: 0.7817, LR: 0.000128
+Epoch [8/10], Batch [2500], Loss: 0.7832, LR: 0.000112
+Epoch [8/10], Batch [3000], Loss: 0.7772, LR: 0.000098
+Epoch [8/10] - Train Accuracy: 73.57% - Test Accuracy: 76.82%
+Epoch [9/10], Batch [500], Loss: 0.7335, LR: 0.000080
+Epoch [9/10], Batch [1000], Loss: 0.7232, LR: 0.000068
+Epoch [9/10], Batch [1500], Loss: 0.7252, LR: 0.000056
+Epoch [9/10], Batch [2000], Loss: 0.7615, LR: 0.000045
+Epoch [9/10], Batch [2500], Loss: 0.7368, LR: 0.000035
+Epoch [9/10], Batch [3000], Loss: 0.7320, LR: 0.000027
+Epoch [9/10] - Train Accuracy: 75.08% - Test Accuracy: 78.00%
+Epoch [10/10], Batch [500], Loss: 0.7128, LR: 0.000018
+Epoch [10/10], Batch [1000], Loss: 0.7259, LR: 0.000012
+Epoch [10/10], Batch [1500], Loss: 0.7176, LR: 0.000007
+Epoch [10/10], Batch [2000], Loss: 0.7040, LR: 0.000003
+Epoch [10/10], Batch [2500], Loss: 0.7084, LR: 0.000001
+Epoch [10/10], Batch [3000], Loss: 0.7241, LR: 0.000000
+Epoch [10/10] - Train Accuracy: 75.80% - Test Accuracy: 77.89%
+
+Final test accuracy: 77.89%
+All train accuracies: [30.628, 50.356, 57.878, 62.5, 65.782, 68.59, 71.17, 73.574, 75.078, 75.804]
