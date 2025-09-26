@@ -2,6 +2,9 @@ import torch
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
+from PIL import Image
+import numpy as np
+import os
 
 
 def load_cifar10_data(batch_size=32, data_dir='./data'):
@@ -90,3 +93,61 @@ def visualize_samples(data_loader, classes, num_samples=8):
 
     plt.tight_layout()
     plt.show()
+
+
+def extract_cifar_image(index=None, dataset='test', save_path='cifar_sample.png', data_dir='./data'):
+    """
+    Extract a single image from CIFAR-10 dataset and save it as a file
+
+    Args:
+        index (int, optional): Index of image to extract. If None, picks random
+        dataset (str): 'train' or 'test' dataset
+        save_path (str): Path where to save the image
+        data_dir (str): Directory containing CIFAR data
+
+    Returns:
+        tuple: (image_path, class_name, class_index)
+    """
+
+    # Load dataset without transforms to get raw data
+    if dataset == 'train':
+        cifar_dataset = torchvision.datasets.CIFAR10(
+            root=data_dir, train=True, download=True, transform=None
+        )
+    else:
+        cifar_dataset = torchvision.datasets.CIFAR10(
+            root=data_dir, train=False, download=True, transform=None
+        )
+
+    # CIFAR-10 class names
+    classes = ('plane', 'car', 'bird', 'cat', 'deer',
+               'dog', 'frog', 'horse', 'ship', 'truck')
+
+    # Select image index
+    if index is None:
+        index = np.random.randint(0, len(cifar_dataset))
+    else:
+        index = min(index, len(cifar_dataset) - 1)
+
+    # Get the image and label
+    image, label = cifar_dataset[index]
+
+    # Convert PIL Image to numpy array and back to PIL for saving
+    # CIFAR-10 images are already PIL Images
+    if isinstance(image, Image.Image):
+        pil_image = image
+    else:
+        # Convert numpy array to PIL Image if needed
+        pil_image = Image.fromarray(image)
+
+    # Ensure the save directory exists
+    os.makedirs(os.path.dirname(save_path) if os.path.dirname(save_path) else '.', exist_ok=True)
+
+    # Save the image
+    pil_image.save(save_path)
+
+    class_name = classes[label]
+
+    print(f"Saved {dataset} image #{index} ({class_name}) to {save_path}")
+
+    return save_path, class_name, label
